@@ -7,6 +7,11 @@
 }
 
 button{
-    background-color: rgb(247, 239, 174);
-    border-radius: 10%;
+    background-color: rgb(255, 186, 106);
+    border-radius: 20%;
+    font-size: 30px;
+}
+
+button.hover{
+    box-shadow: black;
 }
