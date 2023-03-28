@@ -1,16 +1,16 @@
 import React, {useState} from 'react'
 
 export default function ItemCount(props) {
-    const [ count, setCount] = useState(props.initial);
+    const [ count, setCount] = useState(0);
 
     function handleAdd(){
-        if (count != props.stock){
+        if (count < props.stock){
             setCount(count + 1)
         }
     }
 
     function handleMinus(){
-        if (count > props.initial){
+        if (count > (props.stock - props.stock)){
             setCount(count - 1)
         }
     }
