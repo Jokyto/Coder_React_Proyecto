@@ -16,14 +16,14 @@ export default function ItemCount(props) {
     }
 
     return (
-    <div>
-        <button onClick={handleMinus}>
+    <div className="col-6">
+        <button className='btn btn-warning' onClick={handleMinus}>
             -
         </button>
-        <span> 
+        <span className='m-2'> 
             {count}
         </span>
-        <button onClick={handleAdd}>+</button>
+        <button className='btn btn-warning' onClick={handleAdd}>+</button>
     </div>
   )
 }
