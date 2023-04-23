@@ -13,6 +13,9 @@ export default function ItemDetail(props) {
       stock={props.product.stock}
       offer={props.product.offer}
       detalle={"d-none"}
-    />
+      classes={"card text-center w-50 m-5"}
+    >
+      {props.children}
+    </Item>
   );
 }

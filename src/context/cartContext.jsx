@@ -7,17 +7,27 @@ const Provider = cartContext.Provider;
 function CartProvider(props) {
   const [cart, setCart] = useState([]);
   const [totalCart, setTotalCart] = useState()
-  
-  function addItem(product,count){
-    const newCart = [...cart];
+  const newCart = [...cart];
 
-    newCart.push({...product, count})
+  function isItemInCart(id){
+    return cart.some(ItemInCart => ItemInCart.id === id)
+  }
+  
+  function addItem(product,countCounter){
+
+    if (isItemInCart(product.id)) {
+      const itemIndex = cart.findIndex((ItemInCart) => ItemInCart.id === product.id);
+      newCart[itemIndex].countCounter += countCounter;
+    }
+    else{
+      newCart.push({...product, countCounter})
+    }
     setCart(newCart)
   }
 
   function getItemsInCart(){
     let total = 0;
-    cart.forEach(item => total+=item.count)
+    cart.forEach(item => total+=item.countCounter)
     setTotalCart(total)
     return totalCart
   }
@@ -25,13 +35,29 @@ function CartProvider(props) {
   function getPriceInCart(){
     let precioTotal = 0;
     cart.forEach((Element) => 
-      precioTotal += Element.count*Element.price
+      precioTotal += Element.countCounter*Element.price
     )
     return precioTotal
   }
 
+  function removeItem(id){
+    const producto = cart.findIndex((itemInCart) => itemInCart.id === id)
+    newCart.splice(producto,1)
+    setCart(newCart)
+  }
+
+  function getCountInCart(id){
+    
+    const producto = cart.find((itemInCart) => itemInCart.id === id);
+    return producto !== undefined ? producto.countCounter:0;
+  }
+
+  function clearCart(){
+    setCart([])
+  }
+
   return(
-    <Provider value={{ cart: cart, addItem: addItem, getItemsInCart:getItemsInCart,getPriceInCart:getPriceInCart}}>
+    <Provider value={{ cart, addItem, getItemsInCart,getPriceInCart, getCountInCart, removeItem,clearCart}}>
         {props.children}
     </Provider>
   )

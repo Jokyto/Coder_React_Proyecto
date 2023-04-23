@@ -1,10 +1,15 @@
-import { useContext } from "react";
+import { useContext,useState, useEffect } from "react";
 import { cartContext } from "../../context/cartContext";
 import { Link } from "react-router-dom";
 
 function CartWidget() {
+  const [itemsCart, setItemsCart] = useState([]);
   const { getItemsInCart } = useContext(cartContext);
-  const itemsCart = getItemsInCart();
+
+  useEffect(() => {
+      setItemsCart(getItemsInCart());
+    });
+  
 
   return (
     <>

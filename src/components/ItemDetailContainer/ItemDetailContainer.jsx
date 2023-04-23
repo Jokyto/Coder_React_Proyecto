@@ -1,25 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useContext } from "react";
 import { useParams, Link } from "react-router-dom";
-import productsDataBase from "../../data/products";
 import ItemDetail from "./ItemDetail";
 import ItemCount from "../ItemCount/ItemCount";
-import { useContext } from "react";
 import { cartContext } from "../../context/cartContext";
 import Loader from "../Loader/Loader";
 import Button from "../Button/Button";
-
-function getSingleItem(id) {
-  const promesa = new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const encontrado = productsDataBase.find((item) => {
-        return item.id === parseInt(id);
-      });
-      resolve(encontrado);
-    }, 1000);
-  });
-
-  return promesa;
-}
+import { getSingleItemFire } from "../../services/firestore";
 
 function ItemDetailContainer() {
   const [isLoading, setIsLoading] = useState(true);
@@ -27,10 +13,10 @@ function ItemDetailContainer() {
   const [addedToCartWidget, seTaddedToCartWidget] = useState(false);
 
   let { id } = useParams();
-  const { addItem } = useContext(cartContext);
+  const { addItem, getCountInCart } = useContext(cartContext);
 
   useEffect(() => {
-    getSingleItem(id).then((respuesta) => {
+    getSingleItemFire(id).then((respuesta) => {
       setProduct(respuesta);
       setIsLoading(false);
     });
@@ -45,27 +31,27 @@ function ItemDetailContainer() {
     return <Loader />;
   }
 
+
+  const countInCart = getCountInCart(product.id);
+
   return (
-    <div className="d-flex justify-content-center">
-      <div className="card text-center w-50 m-5">
-        <ItemDetail product={product} />
-        <div className="card-footer">
-          <div className="row">
-            <h4>{product.price}$</h4>
-            <div className="row justify-content-md-between justify-content-center ms-1 m-md-0">
-              {!addedToCartWidget ? <ItemCount stock={product.stock} onAddToCar={handleAddToCar} /> 
-              :
-                <Link to={`/cart`}>
-                  <Button classes = "btn btn-outline-primary w-50"> 
-                    Ver en el carrito
-                  </Button>
-                </Link>
-              }
+        <ItemDetail product={product}>
+          <div className="card-footer">
+            <div className="row">
+              <h4>{product.price}$</h4>
+              <div className="row justify-content-md-between justify-content-center ms-1 m-md-0">
+                {!addedToCartWidget ? <ItemCount stock={product.stock - countInCart} onAddToCar={handleAddToCar} /> 
+                :
+                  <Link to={`/cart`}>
+                    <Button classes = "btn btn-outline-primary w-50"> 
+                      Ver en el carrito
+                    </Button>
+                  </Link>
+                }
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
+        </ItemDetail>
   );
 }
 
