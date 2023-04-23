@@ -3,6 +3,7 @@ import "./ItemListContainer.css";
 import productsDataBase from "../../data/products";
 import ItemList from "../Item/ItemList";
 import { useParams } from "react-router-dom";
+import Loader from "../Loader/Loader";
 
 function getItems(){
     const promesa = new Promise((resolve) => {
@@ -28,6 +29,7 @@ function ItemListContainer() {
 
     const [producto, setProducto] = useState([])
     const {categoryid} = useParams();
+
     useEffect(() =>{
         if(categoryid === undefined){
             getItems().then((respuesta) => {
@@ -40,6 +42,10 @@ function ItemListContainer() {
             })
         }
     },[categoryid]);
+
+    if(producto.length === 0){
+        return <Loader/>
+    }
 
     return(
         <ItemList product = {producto}/>
